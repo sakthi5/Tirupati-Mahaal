@@ -42,7 +42,7 @@ export default function GallerySection() {
       id='gallery'>
       <div className={styles.cornerLeft}>
         <Image
-          src='/images/big-mandala.webp'
+          src=''
           alt=''
           fill
           className={styles.cornerImg}
@@ -50,7 +50,7 @@ export default function GallerySection() {
       </div>
       <div className={styles.cornerRight}>
         <Image
-          src='/images/big-mandala.webp'
+          src=''
           alt=''
           fill
           className={styles.cornerImg}
