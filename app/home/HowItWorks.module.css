@@ -1,0 +1,533 @@
+/* ---------- Scroll mechanics ---------- */
+
+.scrollSection {
+  position: relative;
+  width: 100%;
+}
+
+.sticky {
+  position: sticky;
+  /* sit flush under the fixed navbar (80px normal, 66px scrolled — use the smaller value so
+     it never overlaps once the user has scrolled down and the navbar has shrunk) */
+  top: 66px;
+  /* fill only the space below the navbar so nothing is clipped */
+  min-height: calc(100vh - 66px);
+  height: auto;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(160deg, #fdefde 0%, #fbf3ea 25%, #fffefa 100%);
+}
+
+.inner {
+  width: 100%;
+  max-width: 1440px;
+  min-height: 100%;
+  height: auto;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  overflow: visible;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+/* ---------- Heading ---------- */
+
+.heading {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Title row — ornament, heading, ornament, all on one line, centered */
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 20px 0;
+}
+
+.ornament {
+  width: 70px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 45px;
+  color: #1f2024;
+  margin: 0;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.highlight {
+  color: #9c1c54;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* ---------- Content layout ---------- */
+
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.left {
+  width: 100%;
+  max-width: 480px;
+}
+
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.frameWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 240px;
+  flex-shrink: 0;
+}
+
+/* Decorative ring around the frame: a 2px conic-gradient border whose
+   opacity sweeps around the circle instead of being uniform — invisible
+   at the 0% start, lightly visible by 30%, fully visible at 60%, fading
+   back down by 75%, and back to invisible at 100%. Sits on a pseudo
+   element (not .frame's own border) so it isn't clipped by .frame's
+   overflow: hidden. */
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(196, 150, 106, 0) 0%,
+    rgba(220, 168, 119, 0.35) 20%,
+    rgba(240, 165, 114, 1) 50%,
+    rgba(238, 169, 119, 1) 75%,
+    rgb(222, 177, 134) 90%,
+    rgba(196, 150, 106, 0) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.frameImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- Step list ---------- */
+
+.stepItem {
+  display: flex;
+  gap: 16px;
+}
+
+.stepIndicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stepCircle {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ffffff;
+  background: #d1d5db;
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.stepCircleCompleted,
+.stepCircleActive {
+  background: #9c1c54;
+}
+
+.stepCircleActive {
+  box-shadow: 0 0 0 5px rgba(156, 28, 84, 0.18);
+}
+
+.stepCircleUpcoming {
+  background: #d1d5db;
+  color: #6b7280;
+}
+
+.stepLine {
+  width: 2px;
+  flex: 1;
+  min-height: 20px;
+  margin: 4px 0;
+  background-image: linear-gradient(to bottom, #c9c9c9 50%, transparent 50%);
+  background-size: 2px 10px;
+}
+
+.stepText {
+  flex: 1;
+  padding-bottom: 30px;
+}
+
+.stepItem:last-child .stepText {
+  padding-bottom: 0;
+}
+
+.stepTitle {
+  margin: 4px 0 10px 0;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 600;
+  color: #9ca3af;
+  transition:
+    color 0.4s ease,
+    font-size 0.4s ease;
+}
+
+.stepTitleActive {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 40px;
+  font-weight: 600;
+  color: #14151a;
+  margin-top: -4px;
+}
+
+.stepDescWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.45s ease,
+    opacity 0.35s ease;
+}
+
+.stepDescWrapperOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.stepDesc {
+  overflow: hidden;
+  margin: 6px 0 0;
+  color: #4b5563;
+  font-size: 16px !important;
+  line-height: 1.65;
+}
+
+/* ---------- Right side image frame ---------- */
+
+.frame {
+  position: relative;
+  z-index: 1;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fdefde, #fdefde);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.visual {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  will-change: transform, opacity;
+  transition:
+    transform 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.5s ease;
+}
+
+.visualActive {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.visualAbove {
+  transform: translateY(-120%);
+  opacity: 0;
+}
+
+.visualBelow {
+  transform: translateY(120%);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepCircle,
+  .stepTitle,
+  .stepDescWrapper,
+  .visual {
+    transition: none !important;
+  }
+}
+
+/* ---------- Responsive breakpoints ---------- */
+
+/* ── Base styles now carry the 1200px+ desktop values.
+   Each max-width query overrides them for smaller screens.
+   Visual output is identical to the previous min-width approach. ── */
+
+/* Wide desktop default (matches old ≥ 1200px) */
+.inner {
+  padding: 36px 64px;
+  gap: 56px;
+}
+
+.content {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.left {
+  max-width: 620px;
+  flex: 1;
+}
+
+.right {
+  width: auto;
+  flex-shrink: 0;
+}
+
+.frameWrapper {
+  width: 370px;
+  height: 370px;
+}
+
+.frame {
+  width: 280px;
+  height: 280px;
+}
+
+/* Desktop (< 1200px) */
+@media (max-width: 1199px) {
+  .inner {
+    padding: 32px 48px;
+    gap: 48px;
+  }
+
+  .left {
+    max-width: 560px;
+  }
+
+  .frameWrapper {
+    width: 340px;
+    height: 340px;
+  }
+
+  .frame {
+    width: 320px;
+    height: 320px;
+  }
+  .title {
+    font-size: 35px;
+  }
+  .subtitle {
+    font-size: 16px;
+  }
+  .stepTitleActive {
+    font-size: 30px;
+  }
+  .stepDesc {
+    font-size: 15px !important;
+  }
+}
+
+/* Tablet portrait (< 992px) — switch back to single-column */
+@media (max-width: 991px) {
+  .inner {
+    padding: 28px 32px;
+    gap: 36px;
+  }
+
+  .content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .left {
+    max-width: 480px;
+    flex: unset;
+    width: 100%;
+  }
+
+  .right {
+    width: 100%;
+  }
+
+  .frameWrapper {
+    width: 280px;
+    height: 280px;
+  }
+
+  .frame {
+    width: 260px;
+    height: 260px;
+  }
+  .title {
+    font-size: 30px;
+  }
+  .subtitle {
+    font-size: 15px;
+  }
+  .stepTitleActive {
+    font-size: 25px;
+  }
+  .stepDesc {
+    font-size: 14px !important;
+  }
+  .stepText {
+    padding-bottom: 20px;
+  }
+}
+
+/* Phones landscape / small tablets (< 768px) */
+@media (max-width: 767px) {
+  .inner {
+    padding: 32px 24px;
+    gap: 28px;
+  }
+
+  .frameWrapper {
+    width: 220px;
+    height: 220px;
+  }
+
+  .frame {
+    width: 200px;
+    height: 200px;
+  }
+  .title {
+    font-size: 25px;
+  }
+  .subtitle {
+    font-size: 14px;
+  }
+  .stepTitleActive {
+    font-size: 20px;
+  }
+  .stepDesc {
+    font-size: 13px !important;
+  }
+  .stepText {
+    padding-bottom: 20px;
+  }
+}
+
+/* Small phones (< 480px) */
+@media (max-width: 479px) {
+  .inner {
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  .frameWrapper {
+    width: 180px;
+    height: 180px;
+  }
+
+  .frame {
+    width: 160px;
+    height: 160px;
+  }
+
+  .ornament {
+    width: 40px;
+  }
+}
+
+/* Short / landscape-mobile viewports */
+@media (max-height: 600px) {
+  .inner {
+    gap: 12px;
+    padding: 12px 20px;
+    justify-content: flex-start;
+  }
+
+  .subtitle {
+    display: none;
+  }
+
+  .titleRow {
+    margin-bottom: 8px;
+  }
+
+  .frameWrapper {
+    width: 200px;
+    height: 200px;
+  }
+
+  .frame {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* Fixed: this was previously (max-height: 680px) and (max-height: 601px),
+   which collapses to just "max-height: 601px" and never covers the
+   601–680px band it was meant for — that whole range of short viewports
+   fell through to the 600px-and-under rules above instead. */
+@media (min-height: 601px) and (max-height: 680px) {
+  .inner {
+    gap: 18px;
+    padding: 18px 24px;
+  }
+
+  .frameWrapper {
+    width: 240px;
+    height: 240px;
+  }
+
+  .frame {
+    width: 200px;
+    height: 200px;
+  }
+}

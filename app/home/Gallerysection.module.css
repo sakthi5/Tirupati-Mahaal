@@ -1,0 +1,220 @@
+/* ---------------------------------------------------------------------
+   Section + heading
+   --------------------------------------------------------------------- */
+
+.gallerySection {
+  position: relative;
+  width: 100%;
+  padding: 40px 60px;
+  scroll-margin-top: 66px; /* Exactly matches the scrolled navbar height */
+  /* min-height: 100vh; */
+  /* background: #fdefde; */
+  background: linear-gradient(320deg, #fdefde 0%, #fbf3ea 25%, #fffefa 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  /* Shared speed control: both rows read this same variable, so they
+     are guaranteed to move at the same speed regardless of screen size. */
+  --marquee-duration: 50s;
+  --gap: 20px;
+}
+
+.cornerLeft,
+.cornerRight {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  z-index: 0;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.cornerLeft {
+  top: -100px;
+  left: -150px;
+}
+
+.cornerRight {
+  bottom: -150px;
+  right: -150px;
+}
+
+.cornerImg {
+  object-fit: contain;
+}
+
+.headingRow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 56px;
+}
+
+.ornament {
+  width: 70px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.heading {
+  text-align: center;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: #1f2024;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.highlight {
+  color: #9c1c54;
+}
+
+/* ---------------------------------------------------------------------
+   Row / viewport
+   --------------------------------------------------------------------- */
+
+.rowWrapper {
+  /* container-type lets child items size themselves with `cqw` below,
+     which is what makes "show exactly N images" work correctly no
+     matter how wide the duplicated, auto-width track itself becomes. */
+  position: relative;
+  z-index: 1;
+  container-type: inline-size;
+  overflow: hidden;
+  width: 100%;
+  margin-bottom: 24px;
+
+  /* How many images should be visible at once — overridden per
+     breakpoint further down. */
+  --visible: 6;
+}
+
+.rowWrapper:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Track (the thing that actually animates)
+   --------------------------------------------------------------------- */
+
+.track {
+  display: flex;
+  align-items: stretch;
+  gap: var(--gap);
+  width: max-content;
+  animation: gallery-scroll var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+/* Row 2 — identical keyframes, just played in reverse, which gives us
+   left-to-right motion for free without writing a second animation. */
+.trackReverse {
+  animation-direction: reverse;
+}
+
+/* Pause on hover so a curious visitor can actually look at a photo.
+   Purely a UX nicety — delete this rule if you'd rather it never stop. */
+.rowWrapper:hover .track {
+  animation-play-state: paused;
+}
+
+@keyframes gallery-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    /* Exactly one full (non-duplicated) set of images wide. */
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Individual image tile
+   --------------------------------------------------------------------- */
+
+.item {
+  position: relative;
+  flex: 0 0
+    calc((100cqw - (var(--gap) * (var(--visible) - 1))) / var(--visible));
+  aspect-ratio: 1 / 1;
+  /* equal width and height */
+  margin: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  /* visible while an image is still loading */
+}
+
+.img {
+  object-fit: cover;
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease;
+}
+
+.item:hover .img {
+  transform: scale(1.08);
+  filter: brightness(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+
+  .img {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Responsive visible-count breakpoints
+   --------------------------------------------------------------------- */
+
+/* Desktop (>1200px) uses the default --visible: 4 set above. */
+
+@media (max-width: 1200px) {
+  .rowWrapper {
+    --visible: 5;
+    /* tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .rowWrapper {
+    --visible: 4;
+    /* mobile */
+  }
+
+  .gallerySection {
+    padding: 56px 0;
+    --gap: 14px;
+  }
+
+  .headingRow {
+    margin-bottom: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rowWrapper {
+    --visible: 3;
+    /* small mobile */
+  }
+
+  .ornament {
+    width: 40px;
+  }
+}
+/* @media (max-width: 450px) {
+  .heading {
+    font-size: 23px;
+  }
+} */

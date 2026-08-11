@@ -1,0 +1,587 @@
+/* -----------------------------------------------------------------------
+   Section shell
+   ----------------------------------------------------------------------- */
+
+.section {
+  /* background: #fdefde; */
+  padding: 40px 24px;
+  background: linear-gradient(160deg, #fffefa 0%, #fbf3ea 25%, #fdefde 100%);
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 40fr 60fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* -----------------------------------------------------------------------
+   Entry animations
+   All children start hidden. When .visible is added (via IntersectionObserver)
+   each child animates in with a staggered delay.
+   ----------------------------------------------------------------------- */
+
+.imageCol,
+.contentCol {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.75s ease,
+    transform 0.75s ease;
+}
+
+.section.visible .imageCol {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+
+.section.visible .contentCol {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imageCol,
+  .contentCol {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* -----------------------------------------------------------------------
+   Left column — images
+   ----------------------------------------------------------------------- */
+
+.imageCol {
+  position: relative;
+  /* single square photo, sized to match the content column */
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+/* ── Primary: single square photo, fills the column and lines up
+     with the content beside it ── */
+.primaryWrap {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.16);
+}
+
+.primaryImg {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ── Ornamental frame — a double-line gold border that sits just
+     outside the photo, with a scroll flourish tucked into each of the
+     four corners. Purely decorative, doesn't affect the photo itself. ── */
+.imageFrame {
+  position: absolute;
+  inset: -10px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.imageFrame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid #c9a24b;
+}
+
+.imageFrame::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px solid #c9a24b;
+}
+
+.frameCorner {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  color: #c9a24b;
+}
+
+.frameCornerSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The artwork is drawn hugging the bottom-left of its own box — mirror
+   it with scaleX/scaleY (not rotate) so it keeps hugging whichever
+   corner it's placed in instead of spinning out of alignment. */
+.frameCornerBL {
+  left: 0;
+  bottom: 0;
+}
+
+.frameCornerBR {
+  right: 0;
+  bottom: 0;
+  transform: scaleX(-1);
+}
+
+.frameCornerTL {
+  left: 0;
+  top: 0;
+  transform: scaleY(-1);
+}
+
+.frameCornerTR {
+  right: 0;
+  top: 0;
+  transform: scale(-1, -1);
+}
+
+/* -----------------------------------------------------------------------
+   Right column — content
+   ----------------------------------------------------------------------- */
+
+.contentCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* -----------------------------------------------------------------------
+   Tabs
+   ----------------------------------------------------------------------- */
+
+.tabBar {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border-radius: 50px;
+  padding: 5px;
+  width: fit-content;
+  margin-bottom: 28px;
+  box-shadow: 0 2px 12px rgba(156, 28, 84, 0.1);
+}
+
+.tab {
+  padding: 9px 28px;
+  border: none;
+  background: transparent;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: #9c1c54;
+}
+
+.tabActive {
+  background: #9c1c54;
+  color: #ffffff !important;
+}
+
+/* -----------------------------------------------------------------------
+   Panel stack — both halls' panels are always in the DOM, placed in the
+   same grid cell. CSS grid sizes that cell to its tallest child, so the
+   stack (and the whole section) never resizes when the active tab
+   changes — it's already exactly as tall as the taller of the two halls,
+   at every screen width, with no hardcoded heights to keep in sync.
+   ----------------------------------------------------------------------- */
+
+.panelStack {
+  display: grid;
+}
+
+.panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.panelInactive {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.panelActive {
+  visibility: visible;
+  animation: fadeSlideIn 0.4s ease both;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #9c1c54;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.eyebrowLine {
+  display: block;
+  width: 28px;
+  height: 2px;
+  background: #9c1c54;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.heading {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #1f2024;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+.body {
+  color: #4b5563;
+  font-size: 0.97rem;
+  line-height: 1.75;
+  margin: 0 0 28px;
+}
+
+/* -----------------------------------------------------------------------
+   Stats grid — 3 columns (one per active stat), each card gets its own
+   --card-color
+   ----------------------------------------------------------------------- */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background: var(--card-color, #9c1c54);
+  border-radius: 14px;
+  padding: 18px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.statValue {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* -----------------------------------------------------------------------
+   Services row — a real grid instead of a wrapping flex row, so every
+   item gets the same fixed width (and therefore the same gap on every
+   side) no matter how many items there are or how long each label is.
+   Grid items are top-aligned by default, so the icon circles always sit
+   on the same line across a row even when one label wraps to two lines
+   and its neighbour doesn't.
+   ----------------------------------------------------------------------- */
+
+.servicesHeading {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #1f2024;
+  margin: 0 0 16px;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 84px);
+  /* justify-content: center; */
+  gap: 22px 16px;
+}
+
+.serviceItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 84px;
+  cursor: default;
+}
+
+.serviceCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f7dfc1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.28s ease;
+  flex-shrink: 0;
+}
+
+.serviceIcon {
+  width: 40px;
+  height: 40px;
+  color: #9c1c54;
+  transition: color 0.28s ease;
+}
+
+.serviceItem:hover .serviceCircle {
+  background: #9c1c54;
+}
+
+.serviceItem:hover .serviceIcon {
+  color: #ffffff;
+}
+
+.serviceLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  line-height: 1.35;
+}
+
+/* -----------------------------------------------------------------------
+   Section-level heading ("Our Facilities")
+   ----------------------------------------------------------------------- */
+
+.sectionHeadingWrap {
+  max-width: 1280px;
+  margin: 0 auto 35px;
+  text-align: center;
+}
+
+.sectionEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #9c1c54;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.sectionEyebrowLine {
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: #9c1c54;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  color: #1f2024;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Heading flanked by ornaments, same row */
+.headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ornament {
+  width: 70px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* highlighted word inside the title */
+.highlight {
+  position: relative;
+  display: inline-block;
+  color: #9c1c54;
+}
+
+/* subtle underline flourish */
+/* .highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #9c1c54, #f31d82);
+  border-radius: 2px;
+  opacity: 0.6;
+} */
+
+/* -----------------------------------------------------------------------
+   Responsive
+   ----------------------------------------------------------------------- */
+
+/* Laptop / small desktop */
+@media (max-width: 1200px) {
+  .inner {
+    gap: 40px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .heading {
+    font-size: 20px;
+  }
+}
+
+/* Tablet portrait */
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .imageCol {
+    order: 1;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .contentCol {
+    order: 2;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sectionHeadingWrap {
+    margin-bottom: 40px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .section {
+    padding: 30px 16px 20px 16px;
+  }
+
+  .imageCol {
+    max-width: 360px;
+  }
+
+  .primaryWrap {
+    border-radius: 16px;
+  }
+
+  .imageFrame {
+    inset: -7px;
+  }
+
+  .frameCorner {
+    width: 44px;
+    height: 44px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .services {
+    grid-template-columns: repeat(auto-fill, 64px);
+    gap: 5px 9px;
+  }
+  .serviceLabel {
+    font-size: 10px;
+  }
+
+  .serviceItem {
+    width: 64px;
+  }
+
+  .serviceCircle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .serviceIcon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .tab {
+    padding: 8px 18px;
+    font-size: 0.82rem;
+  }
+
+  .ornament {
+    width: 40px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 400px) {
+  .imageCol {
+    max-width: 300px;
+  }
+
+  .frameCorner {
+    width: 36px;
+    height: 36px;
+  }
+
+  .statsGrid {
+    gap: 8px;
+  }
+
+  .statCard {
+    padding: 14px 8px;
+  }
+
+  .services {
+    justify-content: center;
+  }
+}
+/* @media (max-width: 450px) {
+  .sectionTitle {
+    font-size: 20px;
+  }
+} */
