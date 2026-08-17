@@ -218,7 +218,6 @@ export default function BookingAdmin() {
                   User Name
                 </label>
                 <input
-                  required
                   name="userName"
                   value={formData.userName}
                   onChange={handleInputChange}
@@ -231,7 +230,6 @@ export default function BookingAdmin() {
                 </label>
                 <input
                   type="email"
-                  required
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
@@ -243,7 +241,6 @@ export default function BookingAdmin() {
                   Phone
                 </label>
                 <input
-                  required
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
@@ -255,7 +252,6 @@ export default function BookingAdmin() {
                   Address
                 </label>
                 <input
-                  required
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
@@ -269,7 +265,6 @@ export default function BookingAdmin() {
                 <input
                   type="date"
                   min={today}
-                  required
                   name="bookingStartDate"
                   value={formData.bookingStartDate}
                   onChange={handleInputChange}
@@ -283,7 +278,6 @@ export default function BookingAdmin() {
                 <input
                   type="date"
                   min={today}
-                  required
                   name="bookingEndDate"
                   value={formData.bookingEndDate}
                   onChange={handleInputChange}
@@ -480,7 +474,6 @@ export default function BookingAdmin() {
                   User Name
                 </label>
                 <input
-                  required
                   name="userName"
                   value={editingBooking.userName}
                   onChange={handleEditInputChange}
@@ -493,7 +486,6 @@ export default function BookingAdmin() {
                 </label>
                 <input
                   type="email"
-                  required
                   name="email"
                   value={editingBooking.email}
                   onChange={handleEditInputChange}
@@ -505,7 +497,6 @@ export default function BookingAdmin() {
                   Phone
                 </label>
                 <input
-                  required
                   name="phone"
                   value={editingBooking.phone}
                   onChange={handleEditInputChange}
@@ -518,7 +509,6 @@ export default function BookingAdmin() {
                 </label>
                 <input
                   type="date"
-                  required
                   name="bookingStartDate"
                   value={editingBooking.bookingStartDate}
                   onChange={handleEditInputChange}
@@ -531,7 +521,6 @@ export default function BookingAdmin() {
                 </label>
                 <input
                   type="date"
-                  required
                   name="bookingEndDate"
                   value={editingBooking.bookingEndDate}
                   onChange={handleEditInputChange}
@@ -543,7 +532,6 @@ export default function BookingAdmin() {
                   Address
                 </label>
                 <input
-                  required
                   name="address"
                   value={editingBooking.address}
                   onChange={handleEditInputChange}
