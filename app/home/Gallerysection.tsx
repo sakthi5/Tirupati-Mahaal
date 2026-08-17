@@ -40,22 +40,6 @@ export default function GallerySection() {
       className={styles.gallerySection}
       aria-label='Our Gallery'
       id='gallery'>
-      <div className={styles.cornerLeft}>
-        <Image
-          src=''
-          alt=''
-          fill
-          className={styles.cornerImg}
-        />
-      </div>
-      <div className={styles.cornerRight}>
-        <Image
-          src=''
-          alt=''
-          fill
-          className={styles.cornerImg}
-        />
-      </div>
       <div className={styles.headingRow}>
         <Ornament className={styles.ornament} />
         <h2 className={styles.heading}>
